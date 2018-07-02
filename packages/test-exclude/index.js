@@ -31,10 +31,6 @@ function TestExclude (opts) {
     this.include = false
   }
 
-  if (this.exclude.indexOf('**/node_modules/**') === -1) {
-    this.exclude.push('**/node_modules/**')
-  }
-
   this.exclude = prepGlobPatterns(
     [].concat(arrify(this.exclude))
   )
@@ -128,8 +124,7 @@ exportFunc.defaultExclude = [
   'test/**',
   'test{,-*}.js',
   '**/*{.,-}test.js',
-  '**/__tests__/**',
-  '**/node_modules/**'
+  '**/__tests__/**'
 ]
 
 module.exports = exportFunc
