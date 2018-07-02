@@ -1,38 +1,56 @@
-# IstanbulJS
+# test-exclude
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/istanbuljs/istanbuljs.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/istanbuljs/istanbuljs.svg?branch=master)](https://travis-ci.org/istanbuljs/istanbuljs)
-[![Coverage Status](https://coveralls.io/repos/istanbuljs/istanbuljs/badge.svg?branch=master)](https://coveralls.io/r/istanbuljs/istanbuljs?branch=master)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
-[![community slack](http://devtoolscommunity.herokuapp.com/badge.svg)](http://devtoolscommunity.herokuapp.com)
+The file include/exclude logic used by [nyc](https://github.com/istanbuljs/nyc).
 
-_Having problems? want to contribute? join our [community slack](http://devtoolscommunity.herokuapp.com)_.
+[![Build Status](https://travis-ci.org/istanbuljs/test-exclude.svg)](https://travis-ci.org/istanbuljs/test-exclude)
+[![Coverage Status](https://coveralls.io/repos/github/istanbuljs/test-exclude/badge.svg?branch=master)](https://coveralls.io/github/istanbuljs/test-exclude?branch=master)
+[![Standard Version](https://img.shields.io/badge/release-standard%20version-brightgreen.svg)](https://github.com/conventional-changelog/standard-version)
+[![Greenkeeper badge](https://badges.greenkeeper.io/istanbuljs/test-exclude.svg)](https://greenkeeper.io/)
 
-> Everyone's favorite JS code coverage tool.
+## Usage
 
-## About this Repo
+```js
+const exclude = require('test-exclude')
+if (exclude().shouldInstrument('./foo.js')) {
+  // let's instrument this file for test coverage!
+}
+```
 
-This [monorepo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md) contains the _nuts and bolts_ utility libraries that facilitate IstanbulJS test coverage; Why a monorepo?
+_you can load configuration from a key in package.json:_
 
-* it allows us to more easily test API changes across coupled modules, e.g., changes to `istanbul-lib-coverage`
-  potentially have an effect on `istanbul-lib-instrument`.
-* it gives us a centralized repo for discussions about bugs and upcoming features.
+_package.json_
 
-## Where Should I Start
+```json
+{
+  "name": "awesome-module",
+  "test": {
+    "include": ["**/index.js"]
+  }
+}
+```
 
-_You're probably actually looking for one of the following repos:_
+_app.js_
 
-* [nyc](https://github.com/istanbuljs/nyc): the IstanbulJS 2.0 command line interface, providing painless coverage support for [most popular testing frameworks](https://istanbul.js.org/docs/tutorials/).
-* [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul): a babel plugin
- for instrumenting your ES2015+ code with Istanbul compatible coverage tracking.
-* [istanbul](https://github.com/gotwarlost/istanbul): the legacy 1.0 IstanbulJS interface (you should
-  now consider instead using nyc or babel-plugin-istanbul).
+```js
+const exclude = require('test-exclude')
+if (exclude({configKey: 'test'}).shouldInstrument('./index.js')) {
+  // let's instrument this file for test coverage!
+}
+```
 
-### Contributing
+## Including node_modules folder
 
-Contributing to the packages contained in this repo is easy:
+by default the `node_modules` folder is added to all groups of
+exclude rules. In the rare case that you wish to instrument files
+stored in `node_modules`, a negative glob can be used:
 
-1. after checking out, run  `npm install` (this will run the lerna build).
-2. to run all tests, simply run `npm test` in the root directory.
-3. to run tests for a single package  `cd package/:name` and run
-   `npm test` within the package's folder.
+```js
+const exclude = require('test-exclude')
+const e = exclude({
+  exclude: ['!**/node_modules/**']
+})
+```
+
+## License
+
+ISC
